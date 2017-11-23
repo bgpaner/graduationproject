@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:orientation="vertical">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:id="@+id/resetpwd_edit_name"
+            android:drawableLeft="@android:drawable/ic_menu_myplaces"
+            android:inputType="textPersonName"
+            android:hint="请输入您的用户名"/>
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:id="@+id/resetpwd_edit_pwd_old"
+            android:inputType="textPassword"
+            android:drawableLeft="@android:drawable/ic_lock_idle_lock"
+            android:hint="请输入您的密码"/>
+        <EditText
+            android:drawableLeft="@android:drawable/ic_lock_idle_lock"
+            android:layout_width="fill_parent"
+            android:layout_height="60dp"
+            android:inputType="textPassword"
+            android:id="@+id/resetpwd_edit_pwd_new"
+            android:hint="请确认您的密码" />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            style="@style/Button.Menu"
+            android:id="@+id/register_btn_sure"
+            android:gravity="center"
+            android:text="确定"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            style="@style/Button.Menu"
+            android:id="@+id/register_btn_cancel"
+            android:gravity="center"
+            android:text="取消"/>
+    </LinearLayout>
+
+</LinearLayout>

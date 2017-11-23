@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="Translucnce">#14000000</color><!--半透明-->
+    <color name="Transparent">#00000000</color><!--透明-->
+    <color name="Black">#000000</color><!--黑色-->
+    <color name="Navy">#000080</color><!--海军蓝-->
+    <color name="Blue">#0000FF</color><!--蓝色-->
+    <color name="Green">#008000</color><!--绿色-->
+    <color name="Teal">#008080</color><!--水鸭色-->
+    <color name="LightBlue">#0080FF</color><!--浅蓝色-->
+    <color name="Lime">#00FF00</color><!--酸橙色-->
+    <color name="BlueGreen">#00FF80</color><!--蓝绿色-->
+    <color name="Cyan">#00FFFF</color><!--青色-->
+
+    <color name="Maroon">#800000</color><!--栗色-->
+    <color name="Purple">#800080</color><!--紫色-->
+    <color name="BrightPurple">#8000FF</color><!--亮紫色-->
+    <color name="Olive">#808000</color><!--橄榄色-->
+    <color name="Gray">#808080</color><!--灰色-->
+    <color name="LightPurple">#8080FF</color><!--浅紫色-->
+    <color name="BrightGreen">#80FF00</color><!--亮绿色-->
+    <color name="LightGreen">#80FF80</color><!--浅绿色-->
+    <color name="BrightBlue">#80FFFF</color><!--亮蓝色-->
+
+    <color name="Red">#FF0000</color><!--红色-->
+    <color name="BrightRed">#FF0080</color><!--艳红色(亮红色)-->
+    <color name="Magenta">#FF00FF</color><!--洋红-->
+
+    <color name="Pink">#FF8080</color><!--粉色-->
+    <color name="LightMagenta">#FF80FF</color><!--浅洋红-->
+    <color name="Yellow">#FFFF00</color><!--黄色-->
+    <color name="LightYellow">#FFFF80</color><!--浅黄色-->
+    <color name="White">#FFFFFF</color><!--白色-->
+
+
+    <color name="Orange">#FF8000</color><!--橙色-->
+    <color name="LightGray">#C0C0C0</color><!--浅灰色-->
+    <!--按钮颜色（蓝色）-->
+    <color name="primaryBlue">#1CB7F0</color>
+
+    <!--登陆模块背景色-->
+    <color name="loginBGC">#F8F8F8</color>
+
+    <!--系统默认颜色-->
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+</resources>
