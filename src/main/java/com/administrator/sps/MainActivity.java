@@ -9,6 +9,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout.LayoutParams;
 import android.app.Activity;
 import android.util.DisplayMetrics;
@@ -20,6 +22,7 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,26 +59,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class MainActivity extends Activity implements OnTouchListener {
+public class MainActivity extends Activity {
+    /**
+     * 侧滑布局对象，用于通过手指滑动将左侧的菜单布局进行显示或隐藏。
+     */
+    private SlidingLayout slidingLayout;
 
-    private LinearLayout menuLayout;//菜单项
-    private LinearLayout contentLayout;//内容项
-    private LayoutParams menuParams;//菜单项目的参数
-    private LayoutParams contentParams;//内容项目的参数contentLayout的宽度值
+    /**
+     * menu按钮，点击按钮展示左侧布局，再点击一次隐藏左侧布局。
+     */
+    private Button menuButton;
+    /**
+     * 放在content布局中的ListView。
+     */
+    private ListView contentListView;
+    /*
+    * 响应触摸事件的区域
+    */
+    private LinearLayout ScrollEvent;
 
-    private int disPlayWidth;//手机屏幕分辨率
-    private float xDown;//手指点下去的横坐标
-    private float xMove;//手指移动的横坐标
-    private float xUp;//记录手指上抬后的横坐标
-
-    private VelocityTracker mVelocityTracker; // 用于计算手指滑动的速度。
-    float velocityX;//手指左右移动的速度
-    public static final int SNAP_VELOCITY = 400; //滚动显示和隐藏menu时，手指滑动需要达到的速度。
-
-    private boolean menuIsShow = false;//初始化菜单项不可翙
-    private static final int menuPadding = 250;//menu完成显示，留给content的宽度
-
-    //map应用
     // 百度地图控件
     private MapView mMapView = null;
     private Toast mToast;
@@ -97,16 +99,33 @@ public class MainActivity extends Activity implements OnTouchListener {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         SDKInitializer.initialize(getApplicationContext());
         setContentView(R.layout.activity_main);
-        initLayoutParams();
-        init();
+        initMap();
+        initParam();
         //initListener();
         //initPark();
     }
 
+    private void initParam(){
+        slidingLayout = (SlidingLayout) findViewById(R.id.slidingLayout);
+        menuButton = (Button) findViewById(R.id.menuButton);
+        ScrollEvent = (LinearLayout) findViewById(R.id.Scrollevent);
+        slidingLayout.setScrollEvent(ScrollEvent);
+        menuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 实现点击一下menu展示左侧布局，再点击一下隐藏左侧布局的功能
+                if (slidingLayout.isLeftLayoutVisible()) {
+                    slidingLayout.scrollToRightLayout();
+                } else {
+                    slidingLayout.scrollToLeftLayout();
+                }
+            }
+        });
+    }
     /**
      * 初始化方法
      */
-    private void init() {
+    private void initMap() {
         mMapView = (MapView) findViewById(R.id.bmapview);
         bdMap = mMapView.getMap();
         mMapView.removeViewAt(1);
@@ -142,7 +161,7 @@ public class MainActivity extends Activity implements OnTouchListener {
         super.onDestroy();
     }
 
-    private void initPark(){
+    /*private void initPark(){
         latlng.add(new LatLng(30.32391910722308,120.348082203764487));
         //清空地图
        // bdMap.clear();
@@ -174,7 +193,7 @@ public class MainActivity extends Activity implements OnTouchListener {
                 return true;
             }
         });
-    }
+    }*/
 
     /*private void initLocation() {
         LocationClientOption option = new LocationClientOption();
@@ -316,7 +335,7 @@ public class MainActivity extends Activity implements OnTouchListener {
         });
     }*/
 
-    private void initListener() {
+    /*private void initListener() {
         bdMap.setOnMapStatusChangeListener(new BaiduMap.OnMapStatusChangeListener() {
 
             @Override
@@ -366,13 +385,13 @@ public class MainActivity extends Activity implements OnTouchListener {
                 // updateMapState(status);
             }
         });
-    }
+    }*/
 
-    private void updateMapState(MapStatus status,LatLng latlng) {
-        LatLng mCenterLatLng = status.target;
-        /**获取经纬度*/
-        latlng=new LatLng(mCenterLatLng.latitude, mCenterLatLng.longitude);
-    }
+   // private void updateMapState(MapStatus status,LatLng latlng) {
+       // LatLng mCenterLatLng = status.target;
+        /*获取经纬度*/
+        //latlng=new LatLng(mCenterLatLng.latitude, mCenterLatLng.longitude);
+   // }
 
    /*  public class MyOnMapClickListener implements BaiduMap.OnMapClickListener {
 
@@ -430,234 +449,4 @@ public class MainActivity extends Activity implements OnTouchListener {
 
         }
     }*/
-
-    /**
-     * 初始化Layout并设置其相应的参数
-     */
-    private void initLayoutParams() {
-        //得到屏幕的大小
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-        disPlayWidth = dm.widthPixels;
-
-        //获得控件
-        menuLayout = (LinearLayout) findViewById(R.id.menu);
-        contentLayout = (LinearLayout) findViewById(R.id.content);
-        findViewById(R.id.layout).setOnTouchListener(this);
-
-        //获得控件参数
-        menuParams = (LinearLayout.LayoutParams) menuLayout.getLayoutParams();
-        contentParams = (LinearLayout.LayoutParams) contentLayout.getLayoutParams();
-
-        //初始化菜单和内容的宽和边距
-        menuParams.width = disPlayWidth - menuPadding;
-        menuParams.rightMargin = 0 - menuParams.width;
-        contentParams.width = disPlayWidth;
-        contentParams.rightMargin = 0;
-
-        //设置参数
-        menuLayout.setLayoutParams(menuParams);
-        contentLayout.setLayoutParams(contentParams);
-
-    }
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        acquireVelocityTracker(event);
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
-                xDown = event.getRawX();
-                break;
-
-            case MotionEvent.ACTION_MOVE:
-                xMove = event.getRawX();
-                isScrollToShowMenu();
-                break;
-
-            case MotionEvent.ACTION_UP:
-                xUp = event.getRawX();
-                isShowMenu();
-                releaseVelocityTracker();
-                break;
-
-            case MotionEvent.ACTION_CANCEL:
-                releaseVelocityTracker();
-                break;
-        }
-        return true;
-    }
-
-    /**
-     * 根据手指按下的距离，判断是否滚动显示菜单
-     */
-    private void isScrollToShowMenu() {
-        int distanceX = (int) (xMove - xDown);
-        if (!menuIsShow) {
-            scrollToShowMenu(distanceX);
-        } else {
-            scrollToHideMenu(distanceX);
-        }
-    }
-
-    /**
-     * 手指抬起之后判断是否要显示菜单
-     */
-    private void isShowMenu() {
-        velocityX = getScrollVelocity();
-        if (wantToShowMenu()) {
-            if (shouldShowMenu()) {
-                showMenu();
-            } else {
-                hideMenu();
-            }
-        } else if (wantToHideMenu()) {
-            if (shouldHideMenu()) {
-                hideMenu();
-            } else {
-                showMenu();
-            }
-        }
-    }
-
-    /**
-     * 想要显示菜单,当向右移动距离大于0并且菜单不可见
-     */
-    private boolean wantToShowMenu() {
-        return !menuIsShow && xUp - xDown > 0;
-    }
-
-    /**
-     * 想要隐藏菜单,当向左移动距离大于0并且菜单可见
-     */
-    private boolean wantToHideMenu() {
-        return menuIsShow && xDown - xUp > 0;
-    }
-
-    /**
-     * 判断应该显示菜单,当向右移动的距离超过菜单的一半或者速度超过给定值
-     */
-    private boolean shouldShowMenu() {
-        return xUp - xDown > menuParams.width / 2 || velocityX > SNAP_VELOCITY;
-    }
-
-    /**
-     * 判断应该隐藏菜单,当向左移动的距离超过菜单的一半或者速度超过给定值
-     */
-    private boolean shouldHideMenu() {
-        return xDown - xUp > menuParams.width / 2 || velocityX > SNAP_VELOCITY;
-    }
-
-    /**
-     * 显示菜单栏
-     */
-    private void showMenu() {
-        new showMenuAsyncTask().execute(50);
-        menuIsShow = true;
-    }
-
-    /**
-     * 隐藏菜单栏
-     */
-    private void hideMenu() {
-        new showMenuAsyncTask().execute(-50);
-        menuIsShow = false;
-    }
-
-    /**
-     * 指针按着时，滚动将菜单慢慢显示出来
-     *
-     * @param scrollX 每次滚动移动的距离
-     */
-    private void scrollToShowMenu(int scrollX) {
-        if (scrollX > 0 && scrollX <= menuParams.width)
-            menuParams.rightMargin = -menuParams.width + scrollX;
-        menuLayout.setLayoutParams(menuParams);
-    }
-
-    /**
-     * 指针按着时，滚动将菜单慢慢隐藏出来
-     *
-     * @param scrollX 每次滚动移动的距离
-     */
-    private void scrollToHideMenu(int scrollX) {
-        if (scrollX >= -menuParams.width && scrollX < 0)
-            menuParams.rightMargin = scrollX;
-        menuLayout.setLayoutParams(menuParams);
-    }
-
-
-    /**
-     * 创建VelocityTracker对象，并将触摸content界面的滑动事件加入到VelocityTracker当中。
-     *
-     * @param event 向VelocityTracker添加MotionEvent
-     */
-    private void acquireVelocityTracker(final MotionEvent event) {
-        if (null == mVelocityTracker) {
-            mVelocityTracker = VelocityTracker.obtain();
-        }
-        mVelocityTracker.addMovement(event);
-    }
-
-    /**
-     * 获取手指在content界面滑动的速度。
-     *
-     * @return 滑动速度，以每秒钟移动了多少像素值为单位。
-     */
-    private int getScrollVelocity() {
-        mVelocityTracker.computeCurrentVelocity(1000);
-        int velocity = (int) mVelocityTracker.getXVelocity();
-
-        return Math.abs(velocity);
-    }
-
-    /**
-     * 释放VelocityTracker
-     */
-    private void releaseVelocityTracker() {
-        if (null != mVelocityTracker) {
-            mVelocityTracker.clear();
-            mVelocityTracker.recycle();
-            mVelocityTracker = null;
-        }
-    }
-
-    /**
-     * ：模拟动画过程，让肉眼能看到滚动的效果
-     */
-    class showMenuAsyncTask extends AsyncTask<Integer, Integer, Integer> {
-
-        @Override
-        protected Integer doInBackground(Integer... params) {
-            int leftMargin = menuParams.rightMargin;
-            while (true) {// 根据传入的速度来滚动界面，当滚动到达左边界或右边界时，跳出循环。
-                leftMargin += params[0];
-                if (params[0] > 0 && leftMargin > 0) {
-                    leftMargin = 0;
-                    break;
-                } else if (params[0] < 0 && leftMargin < -menuParams.width) {
-                    leftMargin = -menuParams.width;
-                    break;
-                }
-                publishProgress(leftMargin);
-                try {
-                    Thread.sleep(40);//休眠一下，肉眼才能看到滚动效果
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-            return leftMargin;
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... value) {
-            menuParams.rightMargin = value[0];
-            menuLayout.setLayoutParams(menuParams);
-        }
-
-        @Override
-        protected void onPostExecute(Integer result) {
-            menuParams.rightMargin = result;
-            menuLayout.setLayoutParams(menuParams);
-        }
-    }
 }

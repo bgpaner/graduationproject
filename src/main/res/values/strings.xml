@@ -24,4 +24,5 @@
     <string name="cancel_fail">注销失败！请输入正确的用户名与密码！</string>
     <string name="name_already_exist">用户名【<xliff:g example="tom" id="id1">%1$s</xliff:g>】已存在，请重新输入！</string>
     <string name="name_not_exist">用户名【<xliff:g example="tom" id="id1">%1$s</xliff:g>】不存在，请重新输入！</string>
+    <string name="menu">Menu</string>
 </resources>
